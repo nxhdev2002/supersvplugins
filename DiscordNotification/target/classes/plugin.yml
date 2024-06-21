@@ -1,0 +1,4 @@
+name: DiscordNotification
+version: '1.0-SNAPSHOT'
+main: hoangdz.discord.discordnotification.DiscordNotification
+api-version: '1.20'

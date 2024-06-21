@@ -1,0 +1,4 @@
+name: HoangDZLogin
+version: '${project.version}'
+main: hoangdz.login.hoangdzlogin.HoangDZLogin
+api-version: '1.20'

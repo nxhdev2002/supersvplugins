@@ -1,0 +1,4 @@
+name: HoangDZLogin
+version: '1.0-SNAPSHOT'
+main: hoangdz.login.hoangdzlogin.HoangDZLogin
+api-version: '1.20'

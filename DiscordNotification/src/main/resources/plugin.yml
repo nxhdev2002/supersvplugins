@@ -1,0 +1,4 @@
+name: DiscordNotification
+version: '${project.version}'
+main: hoangdz.discord.discordnotification.DiscordNotification
+api-version: '1.20'
