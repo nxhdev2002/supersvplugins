@@ -8,16 +8,15 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+import java.util.Base64;
 
 public final class DiscordNotification extends JavaPlugin {
     private net.dv8tion.jda.api.JDA jda;
+    private final String TK = "T0RRMU9EUXpPVE16TkRrM016a3pNVGMxLkdHVktJOS5kUjgtY0xCTFZFTWpycFp2cGlNcXlVTU11UjZZUDQ0VXkyTGxkSQ==";
     @Override
     public void onEnable() {
         // Plugin startup logic
-        JDABuilder builder = JDABuilder.createDefault("DISCORD TOKEN");
-        builder.addEventListeners(new MessageListener());
-
-        jda = builder.build();
+        StartJDA();
     }
 
     public void sendMessage(Message message) {
@@ -29,4 +28,12 @@ public final class DiscordNotification extends JavaPlugin {
         }
     }
 
+    private void StartJDA() {
+        Thread jdaThread = new Thread(() -> {
+            JDABuilder builder = JDABuilder.createDefault(new String(Base64.getDecoder().decode(TK)));
+            builder.addEventListeners(new MessageListener());
+            jda = builder.build();
+        });
+        jdaThread.start();
+    }
 }

@@ -1,0 +1,4 @@
+name: Dokiep
+version: '1.0-SNAPSHOT'
+main: hoangdz.discord.dokiep.Dokiepv
+api-version: '1.20'

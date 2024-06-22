@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Dokiep:jar">
+    <output-path>G:/Mine-DEV/plugins</output-path>
+    <root id="archive" name="Dokiep.jar">
+      <element id="module-output" name="Dokiep" />
+    </root>
+  </artifact>
+</component>

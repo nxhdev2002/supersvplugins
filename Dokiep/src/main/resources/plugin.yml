@@ -1,0 +1,4 @@
+name: Dokiep
+version: '${project.version}'
+main: hoangdz.discord.dokiep.Dokiepv
+api-version: '1.20'

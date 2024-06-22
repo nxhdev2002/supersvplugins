@@ -1,0 +1,4 @@
+name: RedisPubSub
+version: '${project.version}'
+main: hoangdz.discord.redispubsub.RedisPubSub
+api-version: '1.20'
