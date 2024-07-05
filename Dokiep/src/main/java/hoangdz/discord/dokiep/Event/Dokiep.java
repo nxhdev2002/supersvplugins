@@ -7,20 +7,25 @@ import hoangdz.discord.redispubsub.RedisManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.bukkit.Bukkit.getServer;
 
 public class Dokiep implements Listener {
 
@@ -57,7 +62,7 @@ public class Dokiep implements Listener {
     public void onUseTeleportItem(PlayerInteractEvent event) {
         if (event.getItem() != null) {
             if (event.getItem().getItemMeta().equals(ItemManager.wand.getItemMeta())) {
-                Location location = new Location(event.getPlayer().getWorld(), 137.9, 252, 59.5);
+                Location location = new Location(event.getPlayer().getWorld(), 114.8, 232.5, 59.4);
                 event.getPlayer().teleport(location);
                 event.getItem().setAmount(0);
                 event.getPlayer().getInventory().addItem(ItemManager.dokiepItem);
@@ -77,14 +82,34 @@ public class Dokiep implements Listener {
                 if (inDoKiepLocation(location)) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 600, 1));
                     player.setCustomName("Độ kiếp sư");
+
+
+                    /// Create bossbar
+                    BossBar bossBar = getServer().createBossBar(
+                            "Lôi Kiếp",
+                            BarColor.RED,
+                            BarStyle.SEGMENTED_10,
+                            BarFlag.CREATE_FOG,
+                            BarFlag.PLAY_BOSS_MUSIC
+                    );
+
+                    bossBar.setVisible(true);
+                    bossBar.addPlayer(event.getPlayer());
+                    AtomicReference<Double> progress = new AtomicReference<>((double) 1);
+
+                    /// start
                     int taskId = Bukkit.getScheduler().runTaskTimer(Dokiepv.getPlugin(Dokiepv.class), () -> {
                         if (inDoKiepLocation(player.getLocation())) {
                             if (!isDone.get()) {
                                 player.getWorld().strikeLightning(player.getLocation());
+                                bossBar.setProgress(progress.get());
+                                progress.set(progress.get() - 0.5);
                             }
                         } else {
                             isDone.set(true);
                             isSuccess.set(false);
+                            bossBar.setVisible(false);
+                            player.setCustomName(null);
                             player.sendMessage("Bạn đã ra khỏi khu vực Độ Kiếp Đài, chúc may mắn lần sau :D.");
                         }
                     }, 0L, 100L).getTaskId();
@@ -92,6 +117,7 @@ public class Dokiep implements Listener {
                     Bukkit.getScheduler().runTaskLater(Dokiepv.getPlugin(Dokiepv.class), () -> {
                         Bukkit.getScheduler().cancelTask(taskId);
                         if (isSuccess.get()) {
+                            bossBar.setVisible(false);
                             player.sendMessage("Chúc mừng bạn đã độ kiếp thành công :)");
                             player.sendMessage("Bạn được ban cho sức mạnh tối thượng trong 5p.");
                             player.setLevel(player.getLevel() + 1);
@@ -99,7 +125,7 @@ public class Dokiep implements Listener {
                             int effRand = rand.nextInt(pot.length + 1) + 1;
                             player.addPotionEffect(new PotionEffect(pot[effRand], 6000, 1));
                         }
-                    }, 600L);
+                    }, 200L);
                 } else {
                     event.setCancelled(true);
                     player.sendMessage("Về Độ Kiếp Đài để tiếp tục");
